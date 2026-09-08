@@ -8,29 +8,51 @@
 </head>
 <body>
   <header class="header">
-    <div class="container">
-      <h1 class="title">DevOps Student Engineering Portal</h1>
-      <p class="subtitle">Academic Git Collaboration Baseline</p>
+    <div class="container header-container">
+      <div class="header-brand">
+        <span class="portal-badge" aria-hidden="true">DEVOPS</span>
+        <div>
+          <h1 class="title">DevOps Student Engineering Portal</h1>
+          <p class="subtitle">Academic Git Collaboration Baseline</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator" aria-label="Portal Status: Online">
+          <span class="status-dot"></span>
+          <span>Portal Online</span>
+        </span>
+      </div>
     </div>
   </header>
 
-  <main class="container">
-    <section class="card" aria-labelledby="student-info-heading">
-      <h2 id="student-info-heading" class="section-title">Student Information</h2>
-      
-      <div class="info-group">
-        <span class="info-label">Student Name:</span>
-        <span class="info-value" id="student-name">Alex Morgan</span>
+  <main class="container main-content">
+    <section class="card profile-card" aria-labelledby="student-info-heading">
+      <div class="card-header">
+        <div class="profile-summary">
+          <div class="avatar-initials" aria-hidden="true">AM</div>
+          <div>
+            <h2 id="student-info-heading" class="section-title">Student Information</h2>
+            <p class="section-subtitle">Engineering Student Profile Record</p>
+          </div>
+        </div>
+        <span class="role-badge">MCA DevOps</span>
       </div>
 
-      <div class="info-group">
-        <span class="info-label">Register Number:</span>
-        <span class="info-value" id="student-reg-no">2447101</span>
-      </div>
+      <div class="info-grid">
+        <div class="info-group">
+          <span class="info-label">Student Name:</span>
+          <span class="info-value" id="student-name">Alex Morgan</span>
+        </div>
 
-      <div class="info-group">
-        <span class="info-label">Programme:</span>
-        <span class="info-value" id="student-programme">Master of Computer Applications (DevOps)</span>
+        <div class="info-group">
+          <span class="info-label">Register Number:</span>
+          <span class="info-value code-value" id="student-reg-no">2447101</span>
+        </div>
+
+        <div class="info-group info-group-wide">
+          <span class="info-label">Programme:</span>
+          <span class="info-value" id="student-programme">Master of Computer Applications (DevOps)</span>
+        </div>
       </div>
 
       <div class="action-area">
@@ -44,8 +66,9 @@
   </main>
 
   <footer class="footer">
-    <div class="container">
+    <div class="container footer-container">
       <p>&copy; 2026 DevOps Student Engineering Portal &bull; Base Version</p>
+      <p class="footer-meta">DevOps Collaboration Lab &bull; Student 2 UI Baseline</p>
     </div>
   </footer>
 
