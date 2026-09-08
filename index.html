@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevOps Student Engineering Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <h1 class="title">DevOps Student Engineering Portal</h1>
+      <p class="subtitle">Academic Git Collaboration Baseline</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card" aria-labelledby="student-info-heading">
+      <h2 id="student-info-heading" class="section-title">Student Information</h2>
+      
+      <div class="info-group">
+        <span class="info-label">Student Name:</span>
+        <span class="info-value" id="student-name">Alex Morgan</span>
+      </div>
+
+      <div class="info-group">
+        <span class="info-label">Register Number:</span>
+        <span class="info-value" id="student-reg-no">2447101</span>
+      </div>
+
+      <div class="info-group">
+        <span class="info-label">Programme:</span>
+        <span class="info-value" id="student-programme">Master of Computer Applications (DevOps)</span>
+      </div>
+
+      <div class="action-area">
+        <button type="button" id="show-details-btn" class="btn">Show Details</button>
+      </div>
+
+      <div id="details-section" class="details-section" aria-live="polite">
+        <!-- Details placeholder for subsequent collaborative stages -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 DevOps Student Engineering Portal &bull; Base Version</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
