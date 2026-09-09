@@ -251,6 +251,20 @@ main {
   color: #1e40af;
 }
 
+/* Contact Section */
+.contact-section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.subsection-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
 /* Action Area */
 .action-area {
   margin-top: 1.25rem;
