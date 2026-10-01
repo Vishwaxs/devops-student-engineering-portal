@@ -1,0 +1,48 @@
+# Dependencies and build artifacts
+node_modules/
+npm-debug.log*
+
+# Lab reports and documentation (not needed in container)
+Lab-2/
+Lab-3/
+Lab-4/
+*.docx
+*.pdf
+*.zip
+
+# Evidence and report files
+evidence/
+evidence-student-3/
+lab1-evidence/
+report_evidence/
+report_pages/
+travel-india/
+travel-india-final-evidence/
+Travel_India_Lab1_Evidence/
+temp_conflict_repro/
+devops-git-lab-1/
+
+# Python scripts (report generators)
+*.py
+
+# PowerShell scripts
+*.ps1
+
+# Verification files
+*.txt
+
+# Git directory
+.git/
+.github/
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+~$*
