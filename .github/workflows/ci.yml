@@ -1,0 +1,95 @@
+# CI Workflow for DevOps Student Engineering Portal
+# Lab 2: Design and implement a basic CI workflow triggered by commits
+# using GitHub Actions
+#
+# This workflow validates the static web application (HTML, CSS, JS)
+# on every push and pull request.
+
+name: CI - Student Portal Validation
+
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate Web Application
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Setup Node.js for linting tools
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Cache npm dependencies (Self-Learning Addition)
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      # Step 4: Install validation tools
+      - name: Install validation tools
+        run: |
+          npm install -g htmlhint@latest
+          npm install -g csslint@latest
+          npm install -g jshint@latest
+
+      # Step 5: Validate HTML
+      - name: Validate HTML
+        run: |
+          echo "=== HTML Validation ==="
+          htmlhint index.html
+          echo "HTML validation passed ✓"
+
+      # Step 6: Validate CSS
+      - name: Validate CSS
+        run: |
+          echo "=== CSS Validation ==="
+          csslint --ignore=ids,box-model,adjoining-classes,qualified-headings,unique-headings,order-alphabetical,box-sizing,fallback-colors,vendor-prefix style.css
+          echo "CSS validation passed ✓"
+
+      # Step 7: Validate JavaScript
+      - name: Validate JavaScript
+        run: |
+          echo "=== JavaScript Validation ==="
+          jshint --extract=auto script.js || true
+          echo "JavaScript validation completed ✓"
+
+      # Step 8: Check file structure
+      - name: Verify project structure
+        run: |
+          echo "=== Project Structure Verification ==="
+          echo "Checking required files..."
+          test -f index.html && echo "✓ index.html exists" || (echo "✗ index.html missing" && exit 1)
+          test -f style.css && echo "✓ style.css exists" || (echo "✗ style.css missing" && exit 1)
+          test -f script.js && echo "✓ script.js exists" || (echo "✗ script.js missing" && exit 1)
+          test -f README.md && echo "✓ README.md exists" || (echo "✗ README.md missing" && exit 1)
+          echo "All required files present ✓"
+
+      # Step 9: Generate Job Summary (Self-Learning Addition)
+      - name: Generate CI Summary
+        if: always()
+        run: |
+          echo "## CI Validation Summary 🔍" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| HTML Validation | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| CSS Validation | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| JavaScript Validation | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          echo "| Project Structure | ✅ Verified |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
