@@ -1,0 +1,12 @@
+{
+  "name": "student-portal-api",
+  "version": "1.0.0",
+  "description": "Backend API for DevOps Student Engineering Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "redis": "^4.7.0"
+  }
+}
