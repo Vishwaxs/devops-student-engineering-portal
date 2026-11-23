@@ -83,7 +83,7 @@ Start-Sleep -Seconds 2
 
 # Step 4: Stop worker
 $cts.Cancel()
-$task.Wait(2000)
+try { $task.Wait(2000) } catch {}
 
 # Step 5: Results Analysis
 Write-Host ""
@@ -121,3 +121,4 @@ if ($total -gt 10 -and $failed -eq 0) {
     Write-Host "VERIFICATION RESULT: INCONCLUSIVE (Sample size too small: $total requests)" -ForegroundColor Yellow
     exit 1
 }
+

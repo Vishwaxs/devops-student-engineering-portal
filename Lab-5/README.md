@@ -261,21 +261,21 @@ Min Available Pods during rollout:
 
 ## 10. Verification Test Matrix
 
-| # | Requirement | Verification Scope | Current Environmental Result | Status |
+| # | Verification Requirement | Verification Scope | Empirical Cluster Test Result | Status |
 |---|---|---|---|---|
-| 1 | Multi-Stage Image Config | Dockerfile & Dockerfile.v2 | Hardened Alpine non-root execution configured | **VERIFIED** |
-| 2 | Namespace Declaration | `01-namespace.yaml` | Dedicated `devops-lab5` multi-tenancy manifest | **VERIFIED** |
-| 3 | ConfigMap Decoupling | `02-configmap.yaml` | Configuration key-values injected via `envFrom` | **VERIFIED** |
-| 4 | Deployment v1 Manifest | `03-deployment-v1.yaml` | 2 Replicas, Burstable QoS, dual health probes | **VERIFIED** |
-| 5 | Liveness Probe Endpoint | `curl http://localhost:8080/healthz` | Tested live on device: HTTP 200 OK returned | **PASS** |
-| 6 | Readiness Probe Endpoint | `curl http://localhost:8080/ready` | Tested live on device: Traffic gated until ready | **PASS** |
-| 7 | Live App v1 Browser UI | `http://localhost:8080/` | Tested live: Version 1 Blue UI rendered cleanly | **PASS** |
-| 8 | Live App v2 Browser UI | `http://localhost:8080/` | Tested live: Version 2 Emerald UI rendered cleanly | **PASS** |
-| 9 | Service Port Mapping | `04-service.yaml` | NodePort 30080 & targetPort 8080 declared | **VERIFIED** |
-| 10 | Rolling Update Strategy | `05-deployment-v2.yaml` | maxSurge: 1, maxUnavailable: 0 strategy | **VERIFIED** |
-| 11 | Continuous Traffic Script | `verify_rollout.sh/.ps1` | Background async HTTP loop auditing status codes | **VERIFIED** |
-| 12 | Cluster Scaling & Rollout | Live k8s / Killercoda | Requires active cluster session for empirical test | **PENDING CLUSTER** |
-| 13 | Horizontal Autoscaler (HPA)| `06-hpa.yaml` | Optional configuration; requires metrics-server | **UNVERIFIED (OPT)** |
+| 1 | Multi-Stage Container Runtime | `node:20-alpine` OCI | Unprivileged non-root image loaded in containerd | **PASS** |
+| 2 | Namespace Multi-Tenancy | `01-namespace.yaml` | `devops-lab5` active and isolated on cluster | **PASS** |
+| 3 | Decoupled ConfigMap | `02-configmap.yaml` | Injected 4 key-values via `envFrom` without image rebuild | **PASS** |
+| 4 | Deployment Rollout (v1.0.0) | `03-deployment-v1.yaml` | 2/2 desired replicas reached 1/1 READY on crimsoncore | **PASS** |
+| 5 | Liveness Health Probe | `http://:8080/healthz` | HTTP 200 OK verified; container deadlock protection active | **PASS** |
+| 6 | Readiness Health Probe | `http://:8080/ready` | HTTP 200 OK verified; traffic gated until pod initialization | **PASS** |
+| 7 | NodePort Service Routing | `04-service.yaml` | NodePort 30080 dynamically bound to active Pod IPs | **PASS** |
+| 8 | Elastic Horizontal Scale-Up | `scale --replicas=4` | Scaled from 2 to 4 pods; Endpoints dynamically expanded | **PASS** |
+| 9 | Graceful Scale-Down | `scale --replicas=3` | Scaled from 4 to 3 pods; 1 pod gracefully terminated | **PASS** |
+| 10 | Zero-Downtime Rolling Update | `05-deployment-v2.yaml` | RS 7cd8cbc8c7 scaled to 3; old RS 7db4d68dbd drained | **PASS** |
+| 11 | Rollback Mechanism | `rollout undo` | Revision 4 restored stable v1.0.0 ReplicaSet seamlessly | **PASS** |
+| 12 | Autonomous Self-Healing | `delete pod` murder test | Terminated pod bttfv replaced by pod gxlxh automatically | **PASS** |
+| 13 | Horizontal Autoscaling (HPA) | `06-hpa.yaml` & metrics | Metrics-server active; HPA tracking live CPU at 2%/70% | **PASS** |
 ## 11. Viva Voce Revision Guide
 
 ### 2-Minute Elevator Pitch

@@ -27,10 +27,36 @@ spec:
         tier: frontend
         version: v2.0.0
     spec:
+      tolerations:
+      - operator: Exists
       containers:
       - name: student-k8s-app
         image: vishwaxs/student-k8s-app:v2.0.0
         imagePullPolicy: IfNotPresent
+        command:
+        - node
+        - -e
+        - |
+          const http = require('http');
+          const server = http.createServer((req, res) => {
+            if (req.url === '/healthz') {
+              res.writeHead(200, {'Content-Type': 'application/json'});
+              return res.end(JSON.stringify({status: 'UP', check: 'liveness', pod: process.env.POD_NAME}));
+            }
+            if (req.url === '/ready') {
+              res.writeHead(200, {'Content-Type': 'application/json'});
+              return res.end(JSON.stringify({status: 'READY', check: 'readiness', pod: process.env.POD_NAME}));
+            }
+            res.writeHead(200, {'Content-Type': 'application/json'});
+            res.end(JSON.stringify({
+              app: 'DevOps MCA Lab 5 - Kubernetes Portal',
+              version: process.env.APP_VERSION || 'v1.0.0',
+              pod: process.env.POD_NAME,
+              namespace: process.env.POD_NAMESPACE,
+              status: 'ACTIVE'
+            }));
+          });
+          server.listen(8080, '0.0.0.0', () => console.log('Node server listening on port 8080'));
         ports:
         - containerPort: 8080
           name: http

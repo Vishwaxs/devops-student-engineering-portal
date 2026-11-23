@@ -207,3 +207,4 @@ To support structured academic learning, every command in this laboratory is cla
   v1beta1.metrics.k8s.io   kube-system/metrics-server   True        5d
   ```
 - **Fallback (if unavailable):** If the status is not `True`, HPA cannot function and will display `<unknown>/70%`. In that case, HPA must be documented as an optional manifest that could not be verified in the local environment.
+
