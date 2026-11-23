@@ -202,7 +202,6 @@ def build_pdf():
     story.append(t_meta)
 
     story.append(Spacer(1, 40))
-    story.append(Paragraph("<b>Academic Evaluation Declaration:</b> <i>This submission represents authentic, containerized implementation executed against a live Kubernetes cluster with verifiable declarative manifests, genuine evidence captures, and comprehensive verification matrices.</i>", ParagraphStyle('Dec', fontName='Helvetica-Oblique', fontSize=8, leading=11, alignment=1, textColor=colors.HexColor("#64748b"))))
 
     story.append(PageBreak())
 
@@ -459,23 +458,23 @@ def build_pdf():
         [Paragraph("<b>Advanced Feature</b>", body_style), Paragraph("<b>Architectural Value & Implementation</b>", body_style), Paragraph("<b>Practical Takeaway</b>", body_style)],
         [
             Paragraph("<b>PreStop Hook & Graceful Draining</b>", body_style),
-            Paragraph("Configured <code>lifecycle.preStop.exec.command: ['/bin/sh', '-c', 'sleep 5']</code> alongside Node.js <code>SIGTERM</code> signal handling. Gives kube-proxy time to remove Pod IP from iptables before killing the process.", body_style),
-            Paragraph("Eliminates HTTP 502/504 Bad Gateway errors during high-throughput rollouts.", body_style)
+            Paragraph("Configured <code>lifecycle.preStop.exec.command: ['/bin/sh', '-c', 'sleep 5']</code> alongside Node.js <code>SIGTERM</code> signal handling. Delays process termination so kube-proxy and iptables can deregister the Pod endpoint before connection closure.", body_style),
+            Paragraph("Mitigates race conditions and reduces transient HTTP connection reset errors during active rollouts.", body_style)
         ],
         [
             Paragraph("<b>Multi-Tier Health Probing</b>", body_style),
             Paragraph("Separated <code>livenessProbe</code> (checks process health on <code>/healthz</code>) from <code>readinessProbe</code> (controls traffic eligibility on <code>/ready</code>).", body_style),
-            Paragraph("Prevents prematurely sending traffic to warming pods; avoids rebooting sluggish pods.", body_style)
+            Paragraph("Prevents prematurely routing client traffic to warming pods; avoids restarting temporarily slow pods.", body_style)
         ],
         [
             Paragraph("<b>Resource QoS Classification</b>", body_style),
             Paragraph("Set explicit resource requests (CPU 50m, Mem 64Mi) and limits (CPU 200m, Mem 128Mi), establishing the <b>Burstable QoS class</b>.", body_style),
-            Paragraph("Guarantees node eviction protection during high memory contention.", body_style)
+            Paragraph("Provides prioritized retention over BestEffort pods during node memory pressure (eviction order: BestEffort &rarr; Burstable &rarr; Guaranteed).", body_style)
         ],
         [
             Paragraph("<b>Horizontal Pod Autoscaler (HPA)</b>", body_style),
-            Paragraph("Engineered <code>06-hpa.yaml</code> targeting average CPU utilization of 70% with automatic scaling boundaries between 2 and 5 replicas.", body_style),
-            Paragraph("Enables automated elasticity in response to real-time traffic spikes.", body_style)
+            Paragraph("Configured <code>06-hpa.yaml</code> targeting 70% CPU utilization (2 to 5 replicas). Requires active <code>metrics-server</code> (<code>v1beta1.metrics.k8s.io</code>) in the cluster environment.", body_style),
+            Paragraph("Enables dynamic automated scaling when metrics-server is deployed; documented as optional configuration.", body_style)
         ]
     ]
     t_enh = Table(enhancements_data, colWidths=[110, 240, 154])
@@ -497,19 +496,20 @@ def build_pdf():
     story.append(Paragraph("The following test matrix documents the empirical verification conducted during execution:", body_style))
 
     test_matrix = [
-        [Paragraph("<b>#</b>", body_style), Paragraph("<b>Verification Requirement</b>", body_style), Paragraph("<b>Execution Command</b>", body_style), Paragraph("<b>Observed Result</b>", body_style), Paragraph("<b>Status</b>", body_style)],
-        [Paragraph("1", body_style), Paragraph("OCI Image Build", body_style), Paragraph("<code>docker images</code>", body_style), Paragraph("v1.0.0 and v2.0.0 built with non-root user", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("2", body_style), Paragraph("Namespace Isolation", body_style), Paragraph("<code>kubectl get ns</code>", body_style), Paragraph("Namespace <code>devops-lab5</code> active", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("3", body_style), Paragraph("ConfigMap Injection", body_style), Paragraph("<code>kubectl get cm</code>", body_style), Paragraph("Key-values loaded via <code>envFrom</code>", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("4", body_style), Paragraph("Deployment Rollout", body_style), Paragraph("<code>rollout status</code>", body_style), Paragraph("2/2 desired replicas reached 1/1 READY", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("5", body_style), Paragraph("Liveness Probe", body_style), Paragraph("<code>curl /healthz</code>", body_style), Paragraph("HTTP 200 OK returned; no crash loops", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("6", body_style), Paragraph("Readiness Probe", body_style), Paragraph("<code>curl /ready</code>", body_style), Paragraph("Traffic routed only after probe success", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("7", body_style), Paragraph("Service Routing", body_style), Paragraph("<code>kubectl get endpoints</code>", body_style), Paragraph("Pod IPs dynamically registered on Port 8080", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("8", body_style), Paragraph("Horizontal Scale Up", body_style), Paragraph("<code>scale --replicas=4</code>", body_style), Paragraph("Replicas increased from 2 to 4 seamlessly", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("9", body_style), Paragraph("Rolling Update", body_style), Paragraph("<code>apply -f v2.yaml</code>", body_style), Paragraph("v2 ReplicaSet spawned; v1 gracefully drained", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("10", body_style), Paragraph("Zero-Downtime Traffic", body_style), Paragraph("100 requests loop", body_style), Paragraph("100/100 HTTP 200 OK (0 dropped requests)", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("11", body_style), Paragraph("Rollback Undo", body_style), Paragraph("<code>rollout undo</code>", body_style), Paragraph("Revision 1 restored cleanly within 15 seconds", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
-        [Paragraph("12", body_style), Paragraph("Self-Healing Fault Test", body_style), Paragraph("<code>delete pod</code>", body_style), Paragraph("Replacement Pod spawned in 2s automatically", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)]
+        [Paragraph("<b>#</b>", body_style), Paragraph("<b>Verification Requirement</b>", body_style), Paragraph("<b>Verification Scope</b>", body_style), Paragraph("<b>Current Environmental Status</b>", body_style), Paragraph("<b>Status</b>", body_style)],
+        [Paragraph("1", body_style), Paragraph("Multi-Stage Image Config", body_style), Paragraph("Dockerfile & Dockerfile.v2", body_style), Paragraph("Hardened Alpine non-root execution configured", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("2", body_style), Paragraph("Namespace Declaration", body_style), Paragraph("<code>01-namespace.yaml</code>", body_style), Paragraph("Dedicated <code>devops-lab5</code> multi-tenancy manifest", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("3", body_style), Paragraph("ConfigMap Decoupling", body_style), Paragraph("<code>02-configmap.yaml</code>", body_style), Paragraph("Configuration key-values injected via <code>envFrom</code>", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("4", body_style), Paragraph("Deployment v1 Manifest", body_style), Paragraph("<code>03-deployment-v1.yaml</code>", body_style), Paragraph("2 Replicas, Burstable QoS, dual health probes", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("5", body_style), Paragraph("Liveness Probe Endpoint", body_style), Paragraph("<code>curl /healthz</code>", body_style), Paragraph("Tested live on device: HTTP 200 OK returned", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
+        [Paragraph("6", body_style), Paragraph("Readiness Probe Endpoint", body_style), Paragraph("<code>curl /ready</code>", body_style), Paragraph("Tested live on device: Traffic gated until ready", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
+        [Paragraph("7", body_style), Paragraph("Live App v1 Browser UI", body_style), Paragraph("<code>http://localhost:8080/</code>", body_style), Paragraph("Tested live: Version 1 Blue UI rendered cleanly", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
+        [Paragraph("8", body_style), Paragraph("Live App v2 Browser UI", body_style), Paragraph("<code>http://localhost:8080/</code>", body_style), Paragraph("Tested live: Version 2 Emerald UI rendered cleanly", body_style), Paragraph("<font color='#059669'><b>PASS</b></font>", body_style)],
+        [Paragraph("9", body_style), Paragraph("Service Port Mapping", body_style), Paragraph("<code>04-service.yaml</code>", body_style), Paragraph("NodePort 30080 & targetPort 8080 declared", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("10", body_style), Paragraph("Rolling Update Manifest", body_style), Paragraph("<code>05-deployment-v2.yaml</code>", body_style), Paragraph("maxSurge: 1, maxUnavailable: 0 strategy", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("11", body_style), Paragraph("Continuous Traffic Script", body_style), Paragraph("<code>verify_rollout.sh/.ps1</code>", body_style), Paragraph("Background async HTTP loop auditing status codes", body_style), Paragraph("<font color='#059669'><b>VERIFIED</b></font>", body_style)],
+        [Paragraph("12", body_style), Paragraph("Cluster Scaling & Rollout", body_style), Paragraph("Live k8s / Killercoda", body_style), Paragraph("Requires active cluster session for empirical test", body_style), Paragraph("<font color='#d97706'><b>PENDING CLUSTER</b></font>", body_style)],
+        [Paragraph("13", body_style), Paragraph("Horizontal Autoscaler (HPA)", body_style), Paragraph("<code>06-hpa.yaml</code>", body_style), Paragraph("Optional configuration; requires metrics-server", body_style), Paragraph("<font color='#64748b'><b>UNVERIFIED (OPT)</b></font>", body_style)]
     ]
     t_test = Table(test_matrix, colWidths=[20, 115, 125, 184, 60])
     t_test.setStyle(TableStyle([

@@ -261,23 +261,21 @@ Min Available Pods during rollout:
 
 ## 10. Verification Test Matrix
 
-| # | Requirement | Verification Command | Expected Result | Status |
+| # | Requirement | Verification Scope | Current Environmental Result | Status |
 |---|---|---|---|---|
-| 1 | Multi-Stage Image | `docker images` | Image built with unprivileged user | **PASS** |
-| 2 | Namespace Isolation | `kubectl get ns` | `devops-lab5` active with labels | **PASS** |
-| 3 | ConfigMap Injection | `kubectl get cm` | Environment variables loaded | **PASS** |
-| 4 | Deployment Rollout | `rollout status` | 2/2 desired replicas reached 1/1 READY | **PASS** |
-| 5 | Liveness Probe | `curl /healthz` | HTTP 200 OK returned | **PASS** |
-| 6 | Readiness Probe | `curl /ready` | Traffic routed only after ready | **PASS** |
-| 7 | Service Routing | `kubectl get endpoints` | Pod IPs registered dynamically | **PASS** |
-| 8 | Horizontal Scaling | `scale --replicas=4` | Pod count increased to 4 seamlessly | **PASS** |
-| 9 | Rolling Update | `apply -f v2.yaml` | New RS scaled up; old RS drained | **PASS** |
-| 10 | Zero-Downtime Traffic | 100 requests loop | 100/100 HTTP 200 OK (0 dropped) | **PASS** |
-| 11 | Rollback Undo | `rollout undo` | Revision 1 restored cleanly | **PASS** |
-| 12 | Self-Healing Fault | `delete pod` | Replacement Pod spawned in 2s | **PASS** |
-
----
-
+| 1 | Multi-Stage Image Config | Dockerfile & Dockerfile.v2 | Hardened Alpine non-root execution configured | **VERIFIED** |
+| 2 | Namespace Declaration | `01-namespace.yaml` | Dedicated `devops-lab5` multi-tenancy manifest | **VERIFIED** |
+| 3 | ConfigMap Decoupling | `02-configmap.yaml` | Configuration key-values injected via `envFrom` | **VERIFIED** |
+| 4 | Deployment v1 Manifest | `03-deployment-v1.yaml` | 2 Replicas, Burstable QoS, dual health probes | **VERIFIED** |
+| 5 | Liveness Probe Endpoint | `curl http://localhost:8080/healthz` | Tested live on device: HTTP 200 OK returned | **PASS** |
+| 6 | Readiness Probe Endpoint | `curl http://localhost:8080/ready` | Tested live on device: Traffic gated until ready | **PASS** |
+| 7 | Live App v1 Browser UI | `http://localhost:8080/` | Tested live: Version 1 Blue UI rendered cleanly | **PASS** |
+| 8 | Live App v2 Browser UI | `http://localhost:8080/` | Tested live: Version 2 Emerald UI rendered cleanly | **PASS** |
+| 9 | Service Port Mapping | `04-service.yaml` | NodePort 30080 & targetPort 8080 declared | **VERIFIED** |
+| 10 | Rolling Update Strategy | `05-deployment-v2.yaml` | maxSurge: 1, maxUnavailable: 0 strategy | **VERIFIED** |
+| 11 | Continuous Traffic Script | `verify_rollout.sh/.ps1` | Background async HTTP loop auditing status codes | **VERIFIED** |
+| 12 | Cluster Scaling & Rollout | Live k8s / Killercoda | Requires active cluster session for empirical test | **PENDING CLUSTER** |
+| 13 | Horizontal Autoscaler (HPA)| `06-hpa.yaml` | Optional configuration; requires metrics-server | **UNVERIFIED (OPT)** |
 ## 11. Viva Voce Revision Guide
 
 ### 2-Minute Elevator Pitch
