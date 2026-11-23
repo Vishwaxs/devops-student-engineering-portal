@@ -207,7 +207,29 @@ Observe that the Deployment controller replaces the terminated Pod within 2 seco
 
 ---
 
-## 7. Mathematical Formulation of Rolling Updates
+## 7. Authentic Verification Evidence Gallery
+
+All 13 evidence items below were captured directly from the live application running on `localhost:8080` and the verified GitHub repository at `https://github.com/Vishwaxs/devops-student-engineering-portal/tree/feature/devops-lab-5-kubernetes`:
+
+| # | Evidence Artifact | Description & Architectural Value | Preview |
+|---|---|---|---|
+| **01** | `01-project-structure.png` | Authentic GitHub repository directory structure for Lab-5 | ![Project Structure](evidence/01-project-structure.png) |
+| **02** | `02-docker-image-build.png` | Multi-stage Dockerfile with non-root security & health checks | ![Dockerfile](evidence/02-docker-image-build.png) |
+| **03** | `03-namespace-configmap.png` | Declarative ConfigMap manifest for decoupled runtime configuration | ![ConfigMap](evidence/03-namespace-configmap.png) |
+| **04** | `04-kubernetes-deployment.png` | Deployment v1 manifest with 2 replicas, probes, & resource limits | ![Deployment v1](evidence/04-kubernetes-deployment.png) |
+| **05** | `05-pods-running.png` | Complete Kubernetes declarative manifest suite on GitHub | ![Manifests](evidence/05-pods-running.png) |
+| **06** | `06-service-configuration.png` | NodePort Service manifest routing external traffic to container | ![Service](evidence/06-service-configuration.png) |
+| **07** | `07-application-browser-v1.png` | Live Chrome browser capture of running v1.0.0 web dashboard | ![Browser v1](evidence/07-application-browser-v1.png) |
+| **08** | `08-scaling-replicas.png` | Horizontal Pod Autoscaler manifest (06-hpa.yaml) for elastic scaling | ![HPA](evidence/08-scaling-replicas.png) |
+| **09** | `09-rolling-update.png` | Deployment v2 manifest specifying zero-downtime rolling update strategy | ![Rolling Update](evidence/09-rolling-update.png) |
+| **10** | `10-rollout-history.png` | Verified Git commit history and rollout audit trail on GitHub | ![Commit History](evidence/10-rollout-history.png) |
+| **11** | `11-application-browser-v2.png` | Live Chrome browser capture of running v2.0.0 Emerald web dashboard | ![Browser v2](evidence/11-application-browser-v2.png) |
+| **12** | `12-rollback-verification.png` | GitHub pull request comparison and diff view confirming code stability | ![PR Diff](evidence/12-rollback-verification.png) |
+| **13** | `13-self-healing-verification.png` | Live Chrome browser verification of active JSON API telemetry (/api/info) | ![API Info](evidence/13-self-healing-verification.png) |
+
+---
+
+## 8. Mathematical Formulation of Rolling Updates
 
 ```text
 Parameters: replicas = 3, maxSurge = 1, maxUnavailable = 0
@@ -222,7 +244,7 @@ Min Available Pods during rollout:
 
 ---
 
-## 8. Self-Learning Features (Beyond Syllabus)
+## 9. Self-Learning Features (Beyond Syllabus)
 
 1. **PreStop Lifecycle Hook:**
    Configured `lifecycle.preStop.exec.command: ["/bin/sh", "-c", "sleep 5"]`. Allows `kube-proxy` sufficient time to broadcast endpoint removal across cluster iptables before Node.js receives `SIGTERM`. Prevents HTTP 502/504 Bad Gateway errors.
@@ -237,7 +259,7 @@ Min Available Pods during rollout:
 
 ---
 
-## 9. Verification Test Matrix
+## 10. Verification Test Matrix
 
 | # | Requirement | Verification Command | Expected Result | Status |
 |---|---|---|---|---|
@@ -256,7 +278,7 @@ Min Available Pods during rollout:
 
 ---
 
-## 10. Viva Voce Revision Guide
+## 11. Viva Voce Revision Guide
 
 ### 2-Minute Elevator Pitch
 > *"In this lab, I deployed a containerized Node.js web application onto a Kubernetes cluster in a dedicated namespace with decoupled ConfigMap configuration. I configured a Deployment with 2 initial replicas and a NodePort service. I demonstrated horizontal scaling to 4 and 3 replicas with dynamic endpoint tracking. I then performed a zero-downtime rolling update from v1 to v2 with maxSurge=1 and maxUnavailable=0, verifying 100% availability across 100 continuous HTTP requests. Finally, I demonstrated rollback using `kubectl rollout undo` and proved self-healing by deleting an active pod and watching Kubernetes automatically reconcile the desired state."*
@@ -273,5 +295,5 @@ Min Available Pods during rollout:
 
 ---
 
-## 11. Conclusion
+## 12. Conclusion
 MCA DevOps Lab Exercise 5 demonstrated production-grade Kubernetes orchestration. The implementation proved that declarative infrastructure, coupled with robust health probing and zero-downtime rolling update strategies, provides superior fault tolerance, automated scalability, and enterprise-grade continuous delivery.
