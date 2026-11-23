@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-portal-config
+  namespace: devops-lab5
+  labels:
+    app: student-k8s-app
+    tier: frontend
+data:
+  APP_NAME: "DevOps MCA Lab 5 - Kubernetes Portal"
+  ENVIRONMENT: "Production"
+  PORT: "8080"
+  LOG_LEVEL: "info"

@@ -1,0 +1,13 @@
+{
+  "name": "devops-k8s-portal",
+  "version": "1.0.0",
+  "description": "MCA DevOps Lab 5 - Kubernetes Containerized Web Application",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

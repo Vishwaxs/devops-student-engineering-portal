@@ -1,0 +1,29 @@
+# Multi-Stage Dockerfile for DevOps MCA Lab 5: Kubernetes Containerized App (Version 2)
+FROM node:20-alpine AS builder
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+LABEL org.opencontainers.image.title="DevOps MCA Lab 5 Portal (v2 Rolling Update)" \
+      org.opencontainers.image.version="2.0.0" \
+      org.opencontainers.image.authors="Vishwas Vashishtha <vishwas.vashishtha@mca.christuniversity.in>"
+
+ENV NODE_ENV=production \
+    PORT=8080 \
+    APP_VERSION=v2.0.0
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY package.json ./
+COPY src/ ./src/
+
+USER node
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=15s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:8080/healthz || exit 1
+
+CMD ["node", "src/server.js"]
