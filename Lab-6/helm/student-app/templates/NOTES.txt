@@ -1,0 +1,9 @@
+Helm Release Installed: {{ .Release.Name }} (Chart {{ .Chart.Name }}-{{ .Chart.Version }})
+Namespace: {{ .Release.Namespace }}
+
+Check release status:
+  kubectl get all -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+Access the application locally via port-forward:
+  kubectl port-forward -n {{ .Release.Namespace }} svc/{{ include "student-app.fullname" . }}-svc 8080:{{ .Values.service.port }}
+

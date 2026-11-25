@@ -1,0 +1,14 @@
+{
+  "name": "devops-lab6-student-app",
+  "version": "1.0.0",
+  "description": "MCA DevOps Lab 6 - Node.js & Express application for ConfigMaps, Secrets, and Helm deployment",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
+

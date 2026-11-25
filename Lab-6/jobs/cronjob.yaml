@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: periodic-audit-cronjob
+  namespace: devops-lab6
+  labels:
+    app: periodic-audit
+    lab: lab-6
+spec:
+  schedule: "* * * * *"
+  startingDeadlineSeconds: 60
+  concurrencyPolicy: Forbid
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            cronjob: periodic-audit-cronjob
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: audit-runner
+              image: node:20-alpine
+              command:
+                - node
+                - -e
+                - |
+                  const os = require('os');
+                  const summary = {
+                    jobType: 'scheduled-portal-audit',
+                    pod: process.env.HOSTNAME,
+                    nodePlatform: os.platform(),
+                    freeMemoryMB: Math.round(os.freemem() / 1024 / 1024),
+                    executedAt: new Date().toISOString(),
+                    auditStatus: 'OK'
+                  };
+                  console.log('Scheduled CronJob Execution:');
+                  console.log(JSON.stringify(summary));
+

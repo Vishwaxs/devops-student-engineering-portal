@@ -1,0 +1,28 @@
+# Controlled failing Job to demonstrate Kubernetes backoffLimit retry behavior.
+# Run temporarily for retry observation, then delete after capturing evidence.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: retry-demo-job
+  namespace: devops-lab6
+  labels:
+    purpose: backoff-retry-demo
+spec:
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        job: retry-demo-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: failing-task
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Attempt started on pod: $(hostname) at $(date -Iseconds)"
+              echo "Simulating missing upstream dependency check (exit code 1)"
+              exit 1
+

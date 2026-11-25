@@ -1,0 +1,8 @@
+replicaCount: 3
+
+config:
+  appEnv: "development-override"
+  logLevel: "debug"
+  appMode: "helm-upgraded"
+  publicMessage: "Upgraded via Helm values-dev.yaml override (3 replicas, debug logging)"
+

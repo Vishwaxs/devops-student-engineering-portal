@@ -1,0 +1,7 @@
+apiVersion: v2
+name: student-app
+description: Helm chart for MCA DevOps Lab 6 Express portal with ConfigMap and external Secret injection
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+

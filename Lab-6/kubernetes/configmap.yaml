@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: student-app-config
+  namespace: devops-lab6
+  labels:
+    app: student-app
+data:
+  APP_NAME: "MCA DevOps Student Portal"
+  APP_ENV: "production-k8s"
+  LOG_LEVEL: "info"
+  APP_MODE: "configmap-verified"
+  PUBLIC_MESSAGE: "Initial ConfigMap loaded in devops-lab6 namespace"
+

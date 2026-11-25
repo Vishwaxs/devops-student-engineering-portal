@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log*
+*.log
+.env
+kubernetes/secret-local.yaml
+*.tmp
+__pycache__/
+

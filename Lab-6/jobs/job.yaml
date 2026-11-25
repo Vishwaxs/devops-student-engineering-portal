@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: student-batch-report-job
+  namespace: devops-lab6
+  labels:
+    app: batch-processor
+    lab: lab-6
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 3
+  activeDeadlineSeconds: 120
+  template:
+    metadata:
+      labels:
+        job: student-batch-report-job
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: batch-processor
+          image: node:20-alpine
+          command:
+            - node
+            - -e
+            - |
+              const fs = require('fs');
+              const crypto = require('crypto');
+              const records = Array.from({ length: 500 }, (_, i) => ({
+                id: 2447201 + i,
+                score: 55 + ((i * 17) % 45)
+              }));
+              const passed = records.filter(r => r.score >= 60).length;
+              const avg = (records.reduce((s, r) => s + r.score, 0) / records.length).toFixed(2);
+              const payload = {
+                task: 'student-batch-report',
+                pod: process.env.HOSTNAME,
+                processedRecords: records.length,
+                passedCount: passed,
+                averageScore: Number(avg),
+                generatedAt: new Date().toISOString()
+              };
+              const digest = crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex').slice(0, 12);
+              payload.checksum = digest;
+              fs.writeFileSync('/tmp/batch-report.json', JSON.stringify(payload, null, 2));
+              console.log('Batch Job completed successfully:');
+              console.log(JSON.stringify(payload, null, 2));
+

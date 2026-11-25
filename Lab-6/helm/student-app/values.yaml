@@ -1,0 +1,35 @@
+replicaCount: 2
+
+image:
+  repository: student-app
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+containerPort: 8080
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080
+  nodePort: 30086
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# Non-sensitive configuration rendered into the Helm-managed ConfigMap
+config:
+  appName: "MCA DevOps Student Portal"
+  appEnv: "production-helm"
+  logLevel: "info"
+  appMode: "helm-v1"
+  publicMessage: "Deployed via Helm chart student-app (baseline values.yaml)"
+
+# Reference an externally created Kubernetes Secret (never store real passwords in values.yaml)
+secretRef:
+  name: "app-credentials"
+
